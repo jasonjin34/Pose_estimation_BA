@@ -2,14 +2,22 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib as mpl
+import random
 
 mpl.rcParams['legend.fontsize'] = 10
 
 # TO Do : 1. Sphere generation check!
 #         2. Cubic generation check!
-#         2. Projection to Cubic check!
+#         3. Projection to Cubic check!
+#         4. Test Project check!
 # draw sphere in sphere coordination
 # coordinaten transformation
+'''---- Updata-----'''
+''' class: sphere, cubic
+'''
+''' functions: listcopy,projection_origin (cubic projection from the original point), projection_test
+'''
+''' blue line is for the test function, red point is the projection point'''
 
 '''define Sphere class'''
 class Sphere:
@@ -217,6 +225,24 @@ def projection_origin(data,edge_length):
                 data[0][index] = data[0][index] * temp_ratio
                 data[1][index] = data[1][index] * temp_ratio
 
+'''test projections validation'''
+def projection_test_fun(test_range,data):
+    # get randon 10 point from the cubic circle  and test the projection
+    projection_test_list_index = []
+    for index in range(0, test_range):
+        x = random.randint(1, len(data[0]))
+        projection_test_list_index.append(x)
+
+    data_projection_test = [[], [], []]
+    for index in range(0, test_range):
+        data_projection_test[0].append(data[0][projection_test_list_index[index]])
+        data_projection_test[0].append(0)
+        data_projection_test[1].append(data[1][projection_test_list_index[index]])
+        data_projection_test[1].append(0)
+        data_projection_test[2].append(data[2][projection_test_list_index[index]])
+        data_projection_test[2].append(0)
+    return data_projection_test
+
 '''generate sphere'''
 sphere = Sphere(100, 10)
 sphere.generate_data()
@@ -231,17 +257,19 @@ data = [[],[],[]]
 data = listcopy(sphere.sphere_data_display)
 projection_origin(data, edge_length)
 
-# set figuredl
+'''generate projection test data'''
+test_sampe_size = 5
+data_projection_test =[[], [], []]
+data_projection_test = projection_test_fun(test_sampe_size, data)
+
+
+# set figured
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 ax.plot(sphere.sphere_data_display[0], sphere.sphere_data_display[1], sphere.sphere_data_display[2], 'k', label='parametric curve', linewidth=1)
 ax.plot(cubic.cubic_data_display[0], cubic.cubic_data_display[1], cubic.cubic_data_display[2], 'g', label='parametric curve', linewidth=0.5)
 ax.scatter(data[0], data[1], data[2], 'r', marker='o', s = 1, color = 'r')
-
-'''
-origin = [0], [0], [0]
-plt.quiver(*origin, data[0], data[1], data[2], scale=1)
-'''
+ax.plot(data_projection_test[0], data_projection_test[1], data_projection_test[2], 'b', label='parametric curve', linewidth =1.5)
 
 ax.set_xlabel('X Label')
 ax.set_ylabel('Y Label')
