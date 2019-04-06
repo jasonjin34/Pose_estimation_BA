@@ -27,9 +27,10 @@ class Sphere:
 
     '''constructor'''
 
-    def __init__(self, divide_input, radius_input):
+    def __init__(self, divide_input, radius_input, sample_size):
         self.divide = divide_input
         self.radius = radius_input
+        self.sample_size = divide_input/sample_size
         '''generate the sphere data in sphere coordinate and transfer it to kartesische coordinate'''
 
     def generate_data(self):
@@ -43,7 +44,7 @@ class Sphere:
                 self.sphere_data[0].append(self.radius * np.sin(th_index) * np.cos(phi_index))
                 self.sphere_data[1].append(self.radius * np.sin(th_index) * np.sin(phi_index))
                 self.sphere_data[2].append(self.radius * np.cos(th_index))
-                if th_count % (self.divide / 10) == 0:
+                if th_count % (self.sample_size) == 0:
                     self.sphere_data_display[0].append(self.radius * np.sin(th_index) * np.cos(phi_index))
                     self.sphere_data_display[1].append(self.radius * np.sin(th_index) * np.sin(phi_index))
                     self.sphere_data_display[2].append(self.radius * np.cos(th_index))
@@ -55,7 +56,7 @@ class Sphere:
                 self.sphere_data[0].append(self.radius * np.sin(th_index) * np.cos(phi_index))
                 self.sphere_data[1].append(self.radius * np.sin(th_index) * np.sin(phi_index))
                 self.sphere_data[2].append(self.radius * np.cos(th_index))
-                if phi_count % (self.divide / 10) == 0:
+                if phi_count % (self.sample_size) == 0:
                     self.sphere_data_display[0].append(self.radius * np.sin(th_index) * np.cos(phi_index))
                     self.sphere_data_display[1].append(self.radius * np.sin(th_index) * np.sin(phi_index))
                     self.sphere_data_display[2].append(self.radius * np.cos(th_index))
@@ -244,7 +245,7 @@ def projection_test_fun(test_range,data):
     return data_projection_test
 
 '''generate sphere'''
-sphere = Sphere(100, 10)
+sphere = Sphere(200, 10, 10)
 sphere.generate_data()
 
 '''generate cubic'''
