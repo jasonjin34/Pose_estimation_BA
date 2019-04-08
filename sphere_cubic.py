@@ -38,6 +38,7 @@ class Sphere:
         phi = np.arange(0.0, 2 * np.pi * (1 + 1 / self.divide), 2 * np.pi / self.divide)
 
         # define sphere data generation functions
+        '''latitude'''
         th_count = 0
         for th_index in th:
             for phi_index in phi:
@@ -49,7 +50,7 @@ class Sphere:
                     self.sphere_data_display[1].append(self.radius * np.sin(th_index) * np.sin(phi_index))
                     self.sphere_data_display[2].append(self.radius * np.cos(th_index))
             th_count = th_count + 1
-
+        '''longitude'''
         phi_count = 0
         for phi_index in phi:
             for th_index in th:
@@ -200,6 +201,7 @@ def listcopy(list):
         outputlist[index] = list[index].copy()
     return outputlist
 
+'''projection from the origin point'''
 def projection_origin(data,edge_length):
     for index in range(len(data[0])):
         # find the biggest value among x, y, z
@@ -226,6 +228,10 @@ def projection_origin(data,edge_length):
                 data[0][index] = data[0][index] * temp_ratio
                 data[1][index] = data[1][index] * temp_ratio
 
+'''projection latitude from the z axis, longtitude from the origin MAYBE ??'''
+
+
+
 '''test projections validation'''
 def projection_test_fun(test_range,data):
     # get randon 10 point from the cubic circle  and test the projection
@@ -245,7 +251,7 @@ def projection_test_fun(test_range,data):
     return data_projection_test
 
 '''generate sphere'''
-sphere = Sphere(200, 10, 10)
+sphere = Sphere(100, 10, 10)
 sphere.generate_data()
 
 '''generate cubic'''
