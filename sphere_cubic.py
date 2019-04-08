@@ -69,7 +69,6 @@ class Cubic:
     # define parameter
     cubic_data = [[], [], []]
     cubic_data_display = [[], [], []]
-
     def __init__(self, edge, divide, interval):
         self.edge = edge;
         self.divide = 1 / divide;
@@ -230,8 +229,6 @@ def projection_origin(data,edge_length):
 
 '''projection latitude from the z axis, longtitude from the origin MAYBE ??'''
 
-
-
 '''test projections validation'''
 def projection_test_fun(test_range,data):
     # get randon 10 point from the cubic circle  and test the projection
@@ -250,21 +247,22 @@ def projection_test_fun(test_range,data):
         data_projection_test[2].append(0)
     return data_projection_test
 
-'''generate sphere'''
+'''
+#generate sphere
 sphere = Sphere(100, 10, 10)
 sphere.generate_data()
 
-'''generate cubic'''
-cubic = Cubic(20, 100, 2)
+##generate cubic
+cubic = Cubic(20, 100, 4)
 cubic.generate_data()
 
-'''projection'''
+##projection
 edge_length = 20/2
 data = [[],[],[]]
 data = listcopy(sphere.sphere_data_display)
 projection_origin(data, edge_length)
 
-'''generate projection test data'''
+#generate projection test data
 test_sampe_size = 5
 data_projection_test =[[], [], []]
 data_projection_test = projection_test_fun(test_sampe_size, data)
@@ -283,3 +281,5 @@ ax.set_ylabel('Y Label')
 ax.set_zlabel('Z Label')
 
 plt.show()
+
+'''
