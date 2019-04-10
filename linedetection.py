@@ -22,7 +22,7 @@ def image_divider(image, row, coloum):
 '''generate edge function '''
 def cannyEdge(src,  min):
     src = cv.cvtColor(src, cv.COLOR_RGB2GRAY)
-    dst = cv.Canny(src, min, min*3, apertureSize=3)
+    dst = cv.Canny(src, min, min*2, apertureSize=3)
     #dst = cv.dilate(dst, None)
     return dst
 
@@ -34,15 +34,32 @@ y_size = image_size[1]
 ratio = x_size/y_size
 
 '''lower resolutions'''
-size = 1200
+size = 1500
 image = cv.resize(image, (size, int(size*ratio)))
+#cv.imshow('origin image', image)
+image_origin = image
+
 image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
-image = cannyEdge(image, 50)
-image = cv.cvtColor(image, cv.COLOR_GRAY2RGB)
+image = cannyEdge(image, 125)
+cv.imshow('edge', image)
+
+line_input_bool = 1
+
+if line_input_bool == 1:
+    Lines = cv.HoughLinesP(image, 1, np.pi/8, 30, minLineLength=30, maxLineGap=10)
+elif line_input_bool == 2:
+    Lines = cv.HoughLinesP(image, 1, np.pi/4, 10)
+
+for line in Lines:
+    x1, y1, x2, y2 = line[0]
+    cv.line(image_origin,(x1, y1), (x2, y2), (0, 255, 0), 2)
+cv.imshow('origin with line', image_origin)
+
+image = cv.cvtColor(image_origin, cv.COLOR_BGR2RGB)
 images = image_divider(image, 2, 3)
 
 '''image plot'''
-fig = plt.figure()
+fig = plt.figure(figsize=(18, 9))
 for index in range(6):
     fig.add_subplot(231 + index)
     plt.imshow(images[index])
