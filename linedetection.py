@@ -1,6 +1,7 @@
 import cv2 as cv
 import matplotlib.pyplot as plt
 import numpy as np
+import copy
 import matplotlib as mpl
 
 '''function use to divide the image into 6 sub images'''
@@ -26,45 +27,77 @@ def cannyEdge(src,  min):
     #dst = cv.dilate(dst, None)
     return dst
 
+def printvalue(a):
+    print('test the track bar value: ' + str(a))
+
+'''define global variable'''
 image = cv.imread('image/sample_1.png', 1)
-#cv.imshow('origin picture', image)
+# cv.imshow('origin picture', image)
 image_size = image.shape
 x_size = image_size[0]
 y_size = image_size[1]
-ratio = x_size/y_size
+ratio = x_size / y_size
 
 '''lower resolutions'''
 size = 1500
-image = cv.resize(image, (size, int(size*ratio)))
-#cv.imshow('origin image', image)
+image = cv.resize(image, (size, int(size * ratio)))
 image_origin = image
-
 image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
 image = cannyEdge(image, 125)
-cv.imshow('edge', image)
 
-line_input_bool = 1
+def image_update(value):
+    Lines = cv.HoughLinesP(image, 1, np.pi / 8, 30, minLineLength=value, maxLineGap=10)
+    image_temp = np.copy(image_origin)
+    for line in Lines:
+        x1, y1, x2, y2 = line[0]
+        cv.line(image_temp, (x1, y1), (x2, y2), (0, 255, 0), 2)
+    cv.imshow('origin with line', image_temp)
 
-if line_input_bool == 1:
-    Lines = cv.HoughLinesP(image, 1, np.pi/8, 30, minLineLength=30, maxLineGap=10)
-elif line_input_bool == 2:
-    Lines = cv.HoughLinesP(image, 1, np.pi/4, 10)
+def main():
+    '''
+    image = cv.imread('image/sample_1.png', 1)
+    # cv.imshow('origin picture', image)
+    image_size = image.shape
+    x_size = image_size[0]
+    y_size = image_size[1]
+    ratio = x_size / y_size
 
-for line in Lines:
-    x1, y1, x2, y2 = line[0]
-    cv.line(image_origin,(x1, y1), (x2, y2), (0, 255, 0), 2)
-cv.imshow('origin with line', image_origin)
+    size = 1500
+    image = cv.resize(image, (size, int(size * ratio)))
+    image_origin = image
 
-image = cv.cvtColor(image_origin, cv.COLOR_BGR2RGB)
-images = image_divider(image, 2, 3)
+    image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
+    image = cannyEdge(image, 125)
+    # cv.imshow('edge', image)
+    line_input_bool = 1
+    if line_input_bool == 1:
+        Lines = cv.HoughLinesP(image, 1, np.pi / 8, 30, minLineLength=15, maxLineGap=10)
+    elif line_input_bool == 2:
+        Lines = cv.HoughLinesP(image, 1, np.pi / 4, 10)
 
-'''image plot'''
-fig = plt.figure(figsize=(18, 9))
-for index in range(6):
-    fig.add_subplot(231 + index)
-    plt.imshow(images[index])
+    for line in Lines:
+        x1, y1, x2, y2 = line[0]
+        cv.line(image_origin, (x1, y1), (x2, y2), (0, 255, 0), 2)
+    '''
+    cv.namedWindow('origin with line')
+    cv.imshow('origin with line', image_origin)
 
-plt.show()
+    image = cv.cvtColor(image_origin, cv.COLOR_BGR2RGB)
+    images = image_divider(image, 2, 3)
 
-cv.waitKey(0)
-cv.destroyAllWindows()
+    cv.createTrackbar('line length', 'origin with line', 0, 50, image_update)
+
+    '''image plot'''
+    '''
+    fig = plt.figure(figsize=(18, 9))
+    for index in range(6):
+        fig.add_subplot(231 + index)
+        plt.imshow(images[index])
+    '''
+
+    plt.show()
+    cv.waitKey(0)
+    cv.destroyAllWindows()
+
+if __name__ == "__main__":
+    main()
